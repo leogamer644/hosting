@@ -1,9 +1,12 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "debian/bookworm64"
   config.vm.box_check_update = false
-  config.vm.network "forwarded_port", guest: 80, host: 80
+  config.vm.network "public_network", bridge: "enp46s0", ip: "192.168.50.100", auto_config: false
+
+  # Host-only network with a fixed IP
+  config.vm.network "private_network", type: "static", ip: "192.168.56.101", auto_config: false
     # Run Ansible from the Vagrant Host
     config.vm.provision "ansible" do |ansible|
-      ansible.playbook = "playbook.yml"
+      ansible.playbook = "playbook.yaml"
     end
 end

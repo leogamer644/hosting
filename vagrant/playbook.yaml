@@ -1,16 +1,28 @@
 ---
-- name: Install Apache and Deploy Files from GitHub
+- name: Install Apache and Deploy Files from GitHub and grafana.
   hosts: all
   become: true
   vars:
-    github_repo: "https://github.com/leogamer644/shortener"
+    github_repo: "https://github.com/leogamer644/hosting"
     destination_dir: "/var/www/html"
+    grafana_ini_path: "/etc/grafana/grafana.ini"
 
   tasks:
-    - name: Add repo forgot name
-    ansible.builtin.apt_repository:
-      repo: deb https://packages.grafana.com/oss/deb stable main
-      state: present
+    - name: Install gpg
+      apt:
+        name: gpg
+        state: present
+        update_cache: yes
+
+    - name: Add Grafana GPG key
+      ansible.builtin.apt_key:
+        url: https://packages.grafana.com/gpg.key
+        state: present
+
+    - name: Add repo
+      ansible.builtin.apt_repository:
+        repo: deb https://packages.grafana.com/oss/deb stable main
+        state: present
 
     - name: Ensure Apache is installed
       apt:
@@ -23,16 +35,31 @@
         name: git
         state: present
         update_cache: yes
+
     - name: Ensure grafana is installed
-          apt:
-            name: grafana
-            state: present
-            update_cache: yes
+      apt:
+        name: grafana
+        state: present
+        update_cache: yes
+    - name: Ensure php is installed
+      apt:
+        name: php
+        state: present
+        update_cache: yes
+    - name: Ensure php2 is installed
+      apt:
+        name: libapache2-mod-php
+        state: present
+        update_cache: yes
+    - name: Remove existing /var/www/html directory
+      file:
+        path: "{{ destination_dir }}"
+        state: absent
 
     - name: Clone GitHub repository
       git:
         repo: "{{ github_repo }}"
-        dest: "{{ destination_dir }}"
+        dest: "{{ destination_dir }}/"
         version: HEAD
         force: yes
 
@@ -49,8 +76,154 @@
         name: apache2
         state: started
         enabled: yes
-    - name: Restart service grafana
-      ansible.builtin.service:
-        name: grafana
+
+    - name: Download Prometheus
+      get_url:
+        url: https://github.com/prometheus/prometheus/releases/download/v2.45.0/prometheus-2.45.0.linux-amd64.tar.gz
+        dest: /tmp/prometheus-2.45.0.linux-amd64.tar.gz
+
+    - name: Extract Prometheus
+      unarchive:
+        src: /tmp/prometheus-2.45.0.linux-amd64.tar.gz
+        dest: /opt/
+        remote_src: yes
+
+    - name: Create Prometheus user
+      user:
+        name: prometheus
+        state: present
+
+    - name: Move Prometheus files to /usr/local/bin
+      command: mv /opt/prometheus-2.45.0.linux-amd64/prometheus /usr/local/bin/
+    
+    - name: Move Prometheus server files to /etc/prometheus
+      command: mv /opt/prometheus-2.45.0.linux-amd64/promtool /usr/local/bin/
+    
+    - name: Create Prometheus configuration directory
+      file:
+        path: /etc/prometheus
+        state: directory
+        owner: prometheus
+        group: prometheus
+
+    - name: Move Prometheus configuration file to correct location
+      copy:
+        src: /opt/prometheus-2.45.0.linux-amd64/prometheus.yml
+        dest: /etc/prometheus/prometheus.yml
+        owner: prometheus
+        group: prometheus
+        remote_src: yes  # This ensures the file is copied from the remote server, not the local machine
+
+
+    - name: Setup Prometheus service
+      copy:
+        content: |
+          [Unit]
+          Description=Prometheus
+          Documentation=https://prometheus.io/docs/introduction/overview/
+
+          [Service]
+          User=prometheus
+          ExecStart=/usr/local/bin/prometheus --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/var/lib/prometheus/
+
+          [Install]
+          WantedBy=multi-user.target
+        dest: /etc/systemd/system/prometheus.service
+
+# Install Node Exporter from GitHub
+    - name: Download Node Exporter
+      get_url:
+        url: https://github.com/prometheus/node_exporter/releases/download/v1.8.2/node_exporter-1.8.2.linux-amd64.tar.gz
+        dest: /tmp/node_exporter-1.7.2.linux-amd64.tar.gz
+
+    - name: Extract Node Exporter
+      unarchive:
+        src: /tmp/node_exporter-1.7.2.linux-amd64.tar.gz
+        dest: /opt/
+        remote_src: yes
+
+    # Create Node Exporter user to run the service
+    - name: Create Node Exporter user
+      user:
+        name: node_exporter
+        state: present
+
+    # Move the Node Exporter binary to /usr/local/bin
+    - name: Move Node Exporter binary to /usr/local/bin
+      command: mv /opt/node_exporter-1.8.2.linux-amd64/node_exporter /usr/local/bin/
+
+    # Create a systemd service file for Node Exporter
+    - name: Create Node Exporter service
+      copy:
+        content: |
+          [Unit]
+          Description=Prometheus Node Exporter
+          Documentation=https://github.com/prometheus/node_exporter
+
+          [Service]
+          User=node_exporter
+          ExecStart=/usr/local/bin/node_exporter
+
+          [Install]
+          WantedBy=multi-user.target
+        dest: /etc/systemd/system/node_exporter.service
+        owner: root
+        group: root
+        mode: '0644'
+
+    # Reload systemd to register the new service
+    # Start and enable the Node Exporter service
+    - name: Reload systemd and start Prometheus
+      systemd:
+        daemon_reload: yes
+        name: prometheus
         state: started
         enabled: yes
+    - name: Reload systemd and start Node Exporter
+      systemd:
+        daemon_reload: yes
+        name: node_exporter
+        state: started
+        enabled: yes
+
+    - name: Ensure Grafana has anonymous access enabled
+      lineinfile:
+        path: "{{ grafana_ini_path }}"
+        regexp: '^#?enabled ='
+        line: 'enabled = true'
+
+    - name: Set the org_role for anonymous access
+      lineinfile:
+        path: "{{ grafana_ini_path }}"
+        regexp: '^#?org_role ='
+        line: 'org_role = Viewer'
+
+    - name: Restart service grafana
+      ansible.builtin.service:
+        name: grafana-server
+        state: started
+        enabled: yes
+
+- name: Install Cloudflare
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Download the cloudflared Linux package
+      shell: wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
+
+    - name: Depackage cloudflared
+      shell: dpkg -i cloudflared-linux-amd64.deb
+
+    - name: Create a cloudflared service directory
+      shell: mkdir -p /etc/cloudflared/
+
+    - name: Install the tunnel as a systemd service
+      shell: cloudflared service install 
+
+    - name: Start the tunnel
+      systemd:
+        name: cloudflared
+        state: started
+        enabled: true
+        masked: no
