@@ -219,7 +219,7 @@
       shell: mkdir -p /etc/cloudflared/
 
     - name: Install the tunnel as a systemd service
-      shell: cloudflared service install 
+      shell: cloudflared service install eyJhIjoiMmEzZDgwYWNkNjg0MzUxOTliNDljZjkzODcxZDk5YTkiLCJ0IjoiYWIwMjAzZGItNzI1MC00ZjkyLWFlNzctMGNlNDg0MzI1NDk4IiwicyI6IlpqRXlPV1k1TXpFdE5qWTVNaTAwT1dVMExUbGlNMll0WXpJM1pHVTBZV05oTVdGayJ9
 
     - name: Start the tunnel
       systemd:
