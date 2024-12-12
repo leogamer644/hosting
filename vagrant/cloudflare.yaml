@@ -1,0 +1,93 @@
+  - name: Install and Configure Cloudflare Tunnel
+    hosts: all
+    become: true
+    vars:
+      cloudflared_bin: "/usr/local/bin/cloudflared"
+      cloudflare_tunnel_name: "vm1"
+      cloudflare_credentials_file: "/etc/cloudflared/credentials.json"
+      domain_name: "leogamer644.com"
+      cloudflared_service_file: "/etc/systemd/system/cloudflared.service"
+    tasks:
+
+    - name: Update package manager cache
+      ansible.builtin.apt:
+        update_cache: yes
+      when: ansible_os_family == 'Debian'
+
+    - name: Install dependencies (Debian-based systems)
+      ansible.builtin.apt:
+        name: ["curl", "wget"]
+        state: present
+      when: ansible_os_family == 'Debian'
+
+    - name: Install dependencies (RHEL-based systems)
+      ansible.builtin.yum:
+        name: ["curl", "wget"]
+        state: present
+      when: ansible_os_family == 'RedHat'
+
+    - name: Download cloudflared binary
+      ansible.builtin.get_url:
+        url: "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64"
+        dest: "{{ cloudflared_bin }}"
+        mode: '0755'
+
+    - name: Authenticate with Cloudflare and create tunnel
+      ansible.builtin.command:
+        cmd: "{{ cloudflared_bin }} tunnel login"
+        creates: "{{ cloudflare_credentials_file }}"
+      register: tunnel_login_output
+
+    - name: Create a new Cloudflare Tunnel
+      ansible.builtin.command:
+        cmd: "{{ cloudflared_bin }} tunnel create {{ cloudflare_tunnel_name }}"
+      register: tunnel_create_output
+
+    - name: Extract tunnel ID from output
+      ansible.builtin.set_fact:
+        tunnel_id: "{{ tunnel_create_output.stdout | regex_search('Tunnel credentials written to ([^\n]+)', '\\1') }}"
+
+    - name: Write the Cloudflare Tunnel configuration file
+      ansible.builtin.copy:
+        dest: /etc/cloudflared/config.yml
+        content: |
+          tunnel: {{ cloudflare_tunnel_name }}
+          credentials-file: {{ cloudflare_credentials_file }}
+
+          ingress:
+            - hostname: {{ domain_name }}
+              service: http://localhost:8080
+            - service: http_status:404
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Create a systemd service for cloudflared
+      ansible.builtin.copy:
+        dest: "{{ cloudflared_service_file }}"
+        content: |
+          [Unit]
+          Description=Cloudflare Tunnel
+          After=network.target
+
+          [Service]
+          Type=simple
+          User=root
+          ExecStart={{ cloudflared_bin }} --config /etc/cloudflared/config.yml --no-autoupdate tunnel run
+          Restart=on-failure
+
+          [Install]
+          WantedBy=multi-user.target
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Reload systemd to apply changes
+      ansible.builtin.systemd:
+        daemon_reload: yes
+
+    - name: Enable and start the Cloudflare Tunnel service
+      ansible.builtin.systemd:
+        name: cloudflared
+        enabled: yes
+        state: started
