@@ -90,7 +90,7 @@ if (!isset($_SESSION['loggedinst']) || $_SESSION['loggedinst'] !== true) {
     <main>
         <p>Monitorización en tiempo real del servidor:</p>
         <form action="logout status.php" method="post"><button type="submit">Cerrar sesion</button></form>
-        <iframe src="http://grafana.leogamer644/d-solo/de718m2tdob9cb/dashboard?orgId=1&from=1734280196016&to=1734301796016&timezone=browser&refresh=5s&panelId=1&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0" title="Dashboard de Grafana"></iframe>
+        <iframe src="https://grafana.leogamer644.com/d/ee6p4otcboykge/new-dashboard?orgId=1&from=2024-12-12T07:11:02.582Z&to=2024-12-12T13:11:02.582Z&timezone=browser" title="Dashboard de Grafana"></iframe>
             
     </main>
     <footer>
