@@ -202,7 +202,7 @@ ab -k -c 1000 -n 10000 -A admin:asir -H "Accept-Encoding: gzip, deflate" https:/
 
 ### Conclusion
 
-.
+It's very harsh on the server to request 1000 users at the same time, even more so when I download a file. It actually crashed the network interface in my ubuntu host... so I had to restart it, that's why there was 1 attempt only that went okay at logo download with 1000 users and compression enabled...
 
 
 <br/>
