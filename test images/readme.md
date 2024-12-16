@@ -21,7 +21,7 @@ These tests were performed with `ab`, which is a benchmarking tool Apache has. T
 
 
 <details>
-    <summary><b>Index page with TLS1.3</b></summary><br/>
+    <summary><b>Index page with TLS1.2</b></summary><br/>
 
 Extra Parameters:
 
@@ -29,7 +29,7 @@ Extra Parameters:
 
 
 ```bash
-ab -k -f TLS1.3 -c 100 -n 1000 https://leogamer644.com
+ab -k -f TLS1.2 -c 100 -n 1000 https://leogamer644.com
 ```
 </details>
 
@@ -63,10 +63,10 @@ ab -k -c 100 -n 1000 -A admin:asir https://leogamer644.com/admin/
 ### 1000 users and 10000 requests
 
 <details>
-    <summary><b>Index page with TLS1.3</b></summary><br/>
+    <summary><b>Index page with TLS1.2</b></summary><br/>
 
 ```bash
-ab -k -f TLS1.3 -c 1000 -n 10000 https://leogamer644.com/
+ab -k -f TLS1.2 -c 1000 -n 10000 https://leogamer644.com/
 ```
 
 </details>
@@ -122,10 +122,10 @@ ab -k -c 1000 -n 10000 -A admin:asir https://leogamer644.com/admin/
 ### 100 users and 1000 requests
 
 <details>
-    <summary><b>Index page with TLS1.3</b></summary><br/>
+    <summary><b>Index page with TLS1.2</b></summary><br/>
 
 ```bash
-ab -k -f TLS1.3 -c 100 -n 1000 -H "Accept-Encoding: gzip, deflate" https://leogamer644.com/
+ab -k -f TLS1.2 -c 100 -n 1000 -H "Accept-Encoding: gzip, deflate" https://leogamer644.com/
 ```
 
 
@@ -156,10 +156,10 @@ ab -k -c 100 -n 1000 -A admin:asir -H "Accept-Encoding: gzip, deflate" https://l
 ### 1000 users and 10000 requests
 
 <details>
-    <summary><b>Index page with TLS1.3</b></summary><br/>
+    <summary><b>Index page with TLS1.2</b></summary><br/>
 
 ```bash
-ab -k -f TLS1.3 -c 1000 -n 10000 -H "Accept-Encoding: gzip, deflate" https://leogamer644.com/
+ab -k -f TLS1.2 -c 1000 -n 10000 -H "Accept-Encoding: gzip, deflate" https://leogamer644.com/
 ```
 
 
