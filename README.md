@@ -24,6 +24,6 @@ Dont worry, my tunnel is gonna die in like a week since this commit is done, so 
 you will also have to change grafana's domain to one in your tunnels setting. I will show you mine in the folder Vagrant_ansible.
 change all the personal stuff like my name in copyright at the bottom to your own.
 ### Performance
-to check performance stats, go to [test images](test images)
+to check performance stats, go to [test images]('test images')
 ### License
 this project is under the gnu license if you want to know more, check the [License](LICENSE).
