@@ -2,7 +2,7 @@
 ### Performance tests
 
 These tests were performed with `ab`, which is a benchmarking tool Apache has. This shows you how many requests per second your Apache installation is capable of serving.
-
+I will not show admin page tests, as they will more than likely fail due to the way it's implemented
 
 <details>
     <summary style="font-size: 18px"><b>No compression tests</b></summary><br/>
@@ -31,6 +31,8 @@ Extra Parameters:
 ```bash
 ab -k -f TLS1.2 -c 100 -n 1000 https://leogamer644.com
 ```
+<img width="334" alt="Screenshot_29" src="https://github.com/user-attachments/assets/32eb8566-688e-492f-b830-dbb52663030a" />
+
 </details>
 
 <details>
@@ -68,6 +70,7 @@ ab -k -c 100 -n 1000 -A admin:asir https://leogamer644.com/admin/
 ```bash
 ab -k -f TLS1.2 -c 1000 -n 10000 https://leogamer644.com/
 ```
+<img width="333" alt="Screenshot_30" src="https://github.com/user-attachments/assets/09492313-da9a-48b5-bf9f-2fd8d12075b1" />
 
 </details>
 
@@ -77,6 +80,7 @@ ab -k -f TLS1.2 -c 1000 -n 10000 https://leogamer644.com/
 ```bash
 ab -k -c 1000 -n 10000 https://leogamer644.com/files/logo.png
 ```
+<img width="336" alt="Screenshot_32" src="https://github.com/user-attachments/assets/854fcf72-490d-4ee1-a781-0557dfc9609d" />
 
 
 </details>
