@@ -21,7 +21,7 @@ These tests were performed with `ab`, which is a benchmarking tool Apache has. T
 
 
 <details>
-    <summary><b>Index page with SSL3 and TLS1.2</b></summary><br/>
+    <summary><b>Index page with TLS1.3</b></summary><br/>
 
 Extra Parameters:
 
@@ -63,7 +63,7 @@ ab -k -c 100 -n 1000 -A admin:asir https://leogamer644.com/admin/
 ### 1000 users and 10000 requests
 
 <details>
-    <summary><b>Index page with SSL3 and TLS1.2</b></summary><br/>
+    <summary><b>Index page with TLS1.3</b></summary><br/>
 
 ```bash
 ab -k -f TLS1.3 -c 1000 -n 10000 https://leogamer644.com/
@@ -122,7 +122,7 @@ ab -k -c 1000 -n 10000 -A admin:asir https://leogamer644.com/admin/
 ### 100 users and 1000 requests
 
 <details>
-    <summary><b>Index page with SSL3 and TLS1.2</b></summary><br/>
+    <summary><b>Index page with TLS1.3</b></summary><br/>
 
 ```bash
 ab -k -f TLS1.3 -c 100 -n 1000 -H "Accept-Encoding: gzip, deflate" https://leogamer644.com/
@@ -132,7 +132,7 @@ ab -k -f TLS1.3 -c 100 -n 1000 -H "Accept-Encoding: gzip, deflate" https://leoga
 </details>
 
 <details>
-    <summary><b>Logo.png image (1.1 MB)</b></summary><br/>
+    <summary><b>Logo.png image (301KB)</b></summary><br/>
 
 ```bash
 ab -k -c 100 -n 1000 -H "Accept-Encoding: gzip, deflate" https://leogamer644.com/files/logo.png
@@ -166,7 +166,7 @@ ab -k -f TLS1.3 -c 1000 -n 10000 -H "Accept-Encoding: gzip, deflate" https://leo
 </details>
 
 <details>
-    <summary><b>Logo.png image (1.1 MB)</b></summary><br/>
+    <summary><b>Logo.png image (301KB)</b></summary><br/>
 
 ```bash
 ab -k -c 1000 -n 10000 -H "Accept-Encoding: gzip, deflate" https://leogamer644.com/logo.png
@@ -175,7 +175,7 @@ ab -k -c 1000 -n 10000 -H "Accept-Encoding: gzip, deflate" https://leogamer644.c
 </details>
 
 <details>
-    <summary><b>Admin page with authentication</b></summary><br/>
+    <summary><b>Admin page</b></summary><br/>
 
 ```bash
 ab -k -c 1000 -n 10000 -A admin:asir -H "Accept-Encoding: gzip, deflate" https://leogamer644.com/admin/
