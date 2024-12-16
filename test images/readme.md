@@ -142,7 +142,7 @@ ab -k -c 100 -n 1000 -H "Accept-Encoding: gzip, deflate" https://leogamer644.com
 </details>
 
 <details>
-    <summary><b>Admin page with authentication</b></summary><br/>
+    <summary><b>Admin page</b></summary><br/>
 
 ```bash
 ab -k -c 100 -n 1000 -A admin:asir -H "Accept-Encoding: gzip, deflate" https://leogamer644.com/admin/
@@ -156,7 +156,7 @@ ab -k -c 100 -n 1000 -A admin:asir -H "Accept-Encoding: gzip, deflate" https://l
 ### 1000 users and 10000 requests
 
 <details>
-    <summary><b>Index page with SSL3 and TLS1.2</b></summary><br/>
+    <summary><b>Index page with TLS1.3</b></summary><br/>
 
 ```bash
 ab -k -f TLS1.3 -c 1000 -n 10000 -H "Accept-Encoding: gzip, deflate" https://leogamer644.com/
