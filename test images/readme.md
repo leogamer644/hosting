@@ -41,6 +41,7 @@ ab -k -f TLS1.2 -c 100 -n 1000 https://leogamer644.com
 ```bash
 ab -k -c 100 -n 1000 https://leogamer644.com/files/logo.png
 ```
+![image](https://github.com/user-attachments/assets/c1ab08e2-e753-49d2-a64e-a4ea218c6593)
 
 </details>
 
@@ -131,7 +132,7 @@ ab -k -c 1000 -n 10000 -A admin:asir https://leogamer644.com/admin/
 ```bash
 ab -k -f TLS1.2 -c 100 -n 1000 -H "Accept-Encoding: gzip, deflate" https://leogamer644.com/
 ```
-
+![image](https://github.com/user-attachments/assets/9346998f-8942-459e-b04d-964f3c9f2dd5)
 
 </details>
 
@@ -141,6 +142,7 @@ ab -k -f TLS1.2 -c 100 -n 1000 -H "Accept-Encoding: gzip, deflate" https://leoga
 ```bash
 ab -k -c 100 -n 1000 -H "Accept-Encoding: gzip, deflate" https://leogamer644.com/files/logo.png
 ```
+![image](https://github.com/user-attachments/assets/597c9910-ca41-42d5-81d8-e98990f4631b)
 
 
 </details>
@@ -165,6 +167,7 @@ ab -k -c 100 -n 1000 -A admin:asir -H "Accept-Encoding: gzip, deflate" https://l
 ```bash
 ab -k -f TLS1.2 -c 1000 -n 10000 -H "Accept-Encoding: gzip, deflate" https://leogamer644.com/
 ```
+![image](https://github.com/user-attachments/assets/336b852f-03fd-4089-bf35-f742c9bb027e)
 
 
 </details>
@@ -175,6 +178,7 @@ ab -k -f TLS1.2 -c 1000 -n 10000 -H "Accept-Encoding: gzip, deflate" https://leo
 ```bash
 ab -k -c 1000 -n 10000 -H "Accept-Encoding: gzip, deflate" https://leogamer644.com/logo.png
 ```
+![image](https://github.com/user-attachments/assets/5c8c7b18-dc22-42ae-8256-8c87e91779ec)
 
 </details>
 
